@@ -2,11 +2,14 @@
 from django.db.models import fields
 from rest_framework import serializers
 from .models import *
-
-#from django.contrib.auth.models import Customers
 from django.contrib.auth import authenticate
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from rest_framework_simplejwt.tokens import RefreshToken
+#from django.contrib.auth import authenticate
+from django.contrib.auth.models import update_last_login
+
+
 
 class CustomuserSerializers(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
@@ -17,13 +20,17 @@ class CustomuserSerializers(serializers.ModelSerializer):
     verified_mobile_no =models.BooleanField(default=False)
     mobile_no     =models.BigIntegerField(null=False,blank=False,validators=[RegexValidator(r'^([0-9]{10})$',message='mobile no must have 10 digit')])
     role=         models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
+    user_role=         models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
+    is_customer = models.BooleanField(default=True)
     address=models.TextField(null=False,blank=False)
 
 
     class Meta:
          model = CustomersProfile
-         fields=('email','verified_email','password','first_name','last_name','mobile_no','verified_mobile_no','role','address')
+         fields=('email','verified_email','password','first_name','last_name','mobile_no','verified_mobile_no','role','address','is_customer')
          extra_kwargs = {'password': {'write_only': True}}
+    
+    
     
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -36,6 +43,7 @@ class CustomuserSerializers(serializers.ModelSerializer):
 
 
 
+
     
     
 class ProductsSerializers(serializers.ModelSerializer):
@@ -45,7 +53,10 @@ class ProductsSerializers(serializers.ModelSerializer):
     
 
     
+
+    
 class CategorySerializers(serializers.ModelSerializer):
+   
     class Meta:
         model=Category
         fields='__all__'

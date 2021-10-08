@@ -9,14 +9,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 urlpatterns = [
     
     path('get-token/', CustomAuthToken.as_view()),
+    
    
-    # path('customer/', LoginAPI.as_view()),
-    # path('customer/<int:user_id>/', LoginAPI.as_view()),
-
-   
-
-    # path('users/',UsersAPI.as_view()),
-    # path('users/<int:user_id>/', UsersAPI.as_view()),
     path('customer/', CustomerProfileAPIVIEW.as_view()),
     path('customer/<int:user_id>/', CustomerProfileAPIVIEW.as_view()),
 

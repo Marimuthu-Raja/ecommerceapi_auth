@@ -14,8 +14,17 @@ from datetime import timedelta
 import rest_framework
 import rest_framework_simplejwt
 
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +54,8 @@ INSTALLED_APPS = [
     'api',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    
+    
     
 ]
 
@@ -143,10 +154,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#AUTH_USER_MODEL = 'api.Customers'
-# PASSWORD_HASHERS=(
-#      'django.contrib.auth.hashers.MD5PasswordHasher',
-# )
+
 AUTH_USER_MODEL = 'api.User'
 
 
@@ -185,14 +193,14 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ',
+    'SIGNING_KEY': 'SECRET_KEY',
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
@@ -216,4 +224,22 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+SWAGGER_SETTINGS = {
+    # For using django admin panel for authentication
+    'USE_SESSION_AUTH': True,
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+
+    # For using other mechanisms for authentication ('basic' uses username/password)
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic',
+        },
+    },
+
+    # For validating your swagger schema(setting None to not validate)
+    'VALIDATOR_URL': None,
+}
+
 

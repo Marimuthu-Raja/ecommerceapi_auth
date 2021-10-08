@@ -32,8 +32,13 @@ class CustomAccountCustomer(BaseUserManager):
         other_fields.setdefault('is_superuser', False)
         other_fields.setdefault('is_active', False)
         other_fields.setdefault('is_customer',False)
-       # other_fields.setdefault('is_student',False)
+        other_fields.setdefault('role','admin')
 
+        if other_fields.get('role')!='admin':
+            raise ValueError('Superuser must have role of Global Admin')
+
+        
+      
         if other_fields.get('is_staff') is not True:
             raise ValueError(
                 'Superuser must be assigned to is_staff=True.')
@@ -55,10 +60,15 @@ class CustomAccountCustomer(BaseUserManager):
         customer.set_password(password)
         customer.save()
         return customer
+    
+    
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True)
     password =  models.CharField(max_length=265, null=True, blank=True)
+    
+    role=models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
+     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
  
@@ -76,14 +86,11 @@ class CustomersProfile(User, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=255,null=False,blank=False,validators=[RegexValidator('^[a-zA-Z]*$',message='Firstname must be in Character')])
     last_name = models.CharField(max_length=255,null=False,blank=False,validators=[RegexValidator('^[a-zA-Z]*$',message='Lastname must be in Character')])
-    #email     = models.CharField(max_length=32,null=True,blank=True)
-    #email=models.EmailField(null=False,blank=False)
     verified_email=models.BooleanField(default=False)
-    
     mobile_no     =models.BigIntegerField(null=False,blank=False,validators=[RegexValidator(r'^([0-9]{10})$',message='mobile no must have 10 digit')])
     verified_mobile_no =models.BooleanField(default=False)
     #password      =models.CharField(max_length=10,null=False,blank=False,validators=[RegexValidator('^(?=.*[!$?])(?=.*[a-z])(?=.*[A-Z]).{8}$',message='invalid password.Password must be 8 characters.and atleast 1 numeric and symbols')])
-    role=         models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
+    #role=         models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
     address=models.TextField(null=False,blank=False)
     is_customer = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -174,58 +181,4 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-# class CustomAccountCustomer(BaseUserManager):
 
-#     def create_customeradmin(self, email, user, password, **other_fields):
-
-#         other_fields.setdefault('is_staff', False)
-#         other_fields.setdefault('is_superuser', False)
-#         other_fields.setdefault('is_active', False)
-#         other_fields.setdefault('is_client_admin',True)
-#         other_fields.setdefault('is_student',False)
-
-#         if other_fields.get('is_staff') is not True:
-#             raise ValueError(
-#                 'Superuser must be assigned to is_staff=True.')
-#         if other_fields.get('is_superuser') is not True:
-#             raise ValueError(
-#                 'Superuser must be assigned to is_superuser=True.')
-
-#         return self.user(email, user, password, **other_fields)
-
-#     def customeradmin(self, email,user, password, **other_fields):
-
-#         if not email:
-#             raise ValueError("You must provide an email address")
-
-#         email = self.normalize_email(email)
-#         customeradmin = self.model(email=email, user=user,
-#                            **other_fields)
-#         customeradmin.set_password(password)
-#         customeradmin.save()
-#         return user
-
-
-#  def create_user(self, username, email,first_name,last_name,password=None):
-#         if not email:
-#             raise ValueError('Users must have unique email address')
-
-#         email = self.normalize_email(email)
-#         user = self.model(username=username, first_name=first_name,last_name=last_name)
-
-#         user.set_password(password)
-#         user.save()
-
-#         return user
-
-#     def create_superuser(self, username, first_name,last_name, password):
-#         user = self.create_user(username, first_name,last_name,password)
-
-#         user.is_superuser = True
-#         user.is_staff = True
-#         user.save()
-
-#         return user
- 
-#     def get_by_natural_key(self,username,):
-#         return self.get(username=username)
