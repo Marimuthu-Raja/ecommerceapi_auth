@@ -80,7 +80,7 @@ class CustomerProfileAPIVIEW(mixins.ListModelMixin,mixins.CreateModelMixin,mixin
         return self.destroy(request, user_id)
 
 
-# Create your views here.
+
 
 
 
@@ -90,8 +90,8 @@ class ProductsAPI(mixins.ListModelMixin,mixins.CreateModelMixin,generics.Generic
     serializer_class =ProductsSerializers
 
    
-    permission_classes=[IsAuthenticated]
-    authentication_classes=[TokenAuthentication]
+    #permission_classes=[IsAuthenticated]
+    #authentication_classes=[TokenAuthentication]
    
     
 
