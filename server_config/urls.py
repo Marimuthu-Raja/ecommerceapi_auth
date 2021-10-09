@@ -26,10 +26,7 @@ from drf_yasg import openapi
 
 from django.conf.urls import url, include
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+
 
 schema_view = get_schema_view(
 openapi.Info(
@@ -48,17 +45,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('api.urls')),
   
-    #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-   
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+  
  
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('doc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
 
-      #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-     
 ]

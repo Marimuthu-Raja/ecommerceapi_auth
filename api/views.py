@@ -1,10 +1,6 @@
 from django.shortcuts import render
-#from django.contrib.auth.models import User
+
 from django.contrib.auth.models import *
-from django.contrib.auth import login
-
-#from rest_framework import permissions
-
 from .models import *
 from .serializers import *
 from rest_framework import mixins
@@ -12,26 +8,17 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import permission_classes
-from django.contrib.auth.hashers import make_password
 
-from django.contrib.auth import login
-
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated,AllowAny
-#from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+
 
 from rest_framework.authentication import TokenAuthentication,SessionAuthentication,BasicAuthentication
 
-from rest_framework.authtoken.views import ObtainAuthToken
 
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from django.http import HttpResponse
-
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 
     
@@ -50,6 +37,9 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+
+    
+    
 class CustomerProfileAPIVIEW(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
     serializer_class = CustomuserSerializers
     queryset = CustomersProfile.objects.all()
@@ -102,7 +92,7 @@ class ProductsAPI(mixins.ListModelMixin,mixins.CreateModelMixin,generics.Generic
             return sef.retrieve(request)
         else:
             return sef.list(request)
-   # @permission_classes([AllowAny])      
+   
     def post(self, request):
         user = request.user
         print(user)
@@ -274,7 +264,16 @@ class OrdersAPI(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAP
         return self.create(request)
     
     def put(self, request, order_id=None):
-       
+       # user = request.user
+        # print(user)
+        # print(user.role)
+        # if user.role != 'admin':
+        #     response = {
+        #         'success': False,
+        #         'status_code': status.HTTP_403_FORBIDDEN,
+        #         'message': 'You are not authorized to perform this action'
+        #     }
+        #     return Response(response, status.HTTP_403_FORBIDDEN)
         return self.update(request, order_id)
     
     def delete(self, request, order_id):

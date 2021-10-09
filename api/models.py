@@ -1,8 +1,7 @@
 from django.core import validators
 from django.db import models
 
-from django_rest_passwordreset.signals import reset_password_token_created
-#from django.db import hashers
+
 
 from django.db.models.deletion import CASCADE
 from django.db.models.expressions import Case
@@ -14,6 +13,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager,User
 
 
@@ -89,8 +89,7 @@ class CustomersProfile(User, PermissionsMixin):
     verified_email=models.BooleanField(default=False)
     mobile_no     =models.BigIntegerField(null=False,blank=False,validators=[RegexValidator(r'^([0-9]{10})$',message='mobile no must have 10 digit')])
     verified_mobile_no =models.BooleanField(default=False)
-    #password      =models.CharField(max_length=10,null=False,blank=False,validators=[RegexValidator('^(?=.*[!$?])(?=.*[a-z])(?=.*[A-Z]).{8}$',message='invalid password.Password must be 8 characters.and atleast 1 numeric and symbols')])
-    #role=         models.CharField(max_length=20,null=False,default='guest',validators=[RegexValidator(r'^[a-zA-Z -.\'\_]+$',message='Role must be in Character')])
+    
     address=models.TextField(null=False,blank=False)
     is_customer = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
